@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KHO SÁCH ONLINE - TÀI LIỆU HỌC TẬP</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f9fafb; color: #1f2937; }
+
+    /* 1. Header & Menu thanh ngang */
+    header { background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 100; }
+    .nav-container { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
+    .logo { font-size: 18px; font-weight: 800; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .nav-menu { display: flex; gap: 6px; overflow-x: auto; max-width: 100%; padding-bottom: 4px; }
+    .nav-btn { background: none; border: none; padding: 8px 14px; border-radius: 6px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+    .nav-btn:hover { background: #f3f4f6; color: #111827; }
+    .nav-btn.active { background: #2563eb; color: #ffffff; }
+
+    /* 2. Banner Hero */
+    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; text-align: center; padding: 45px 20px; margin-bottom: 25px; }
+    .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+    .hero p { font-size: 14px; opacity: 0.9; max-width: 600px; margin: 0 auto 20px; }
+    .search-box { max-width: 480px; margin: 0 auto; }
+    .search-box input { width: 100%; padding: 12px 18px; border-radius: 25px; border: none; font-size: 15px; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+
+    /* 3. Lưới hiển thị sách */
+    .main-content { max-width: 1100px; margin: 0 auto; padding: 0 20px 60px; }
+    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; border-left: 4px solid #2563eb; padding-left: 10px; }
+    
+    .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 20px; }
+    .book-card { background: #ffffff; border-radius: 8px; border: 1px solid #e5e7eb; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
+    .book-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.06); }
+    
+    /* Ảnh sách chuẩn tỉ lệ đứng 3:4 */
+    .book-cover-wrap { width: 100%; aspect-ratio: 3/4; background: #f3f4f6; overflow: hidden; position: relative; }
+    .book-cover { width: 100%; height: 100%; object-fit: cover; }
+    .badge-subject { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); color: white; font-size: 11px; padding: 3px 7px; border-radius: 4px; font-weight: 600; }
+
+    .book-info { padding: 12px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; gap: 10px; }
+    .book-title { font-size: 14px; font-weight: 700; line-height: 1.4; color: #111827; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 38px; }
+    .book-btn { background: #2563eb; color: #ffffff; border: none; padding: 8px 0; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; width: 100%; transition: 0.2s; }
+    .book-btn:hover { background: #1d4ed8; }
+
+    /* 4. Modal Pop-up */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); align-items: center; justify-content: center; z-index: 200; padding: 16px; }
+    .modal-box { background: #ffffff; width: 100%; max-width: 380px; border-radius: 12px; padding: 24px; text-align: center; }
+    .modal-cover { width: 110px; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; margin: 0 auto 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); display: block; }
+    .btn-shopee { display: block; background: #ee4d2d; color: white; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; margin-top: 14px; width: 100%; }
+  </style>
+</head>
+<body>
+
+  <!-- Menu ngang tương tự Google Sites -->
+  <header>
+    <div class="nav-container">
+      <div class="logo">📚 KHO SÁCH ONLINE</div>
+      <nav class="nav-menu" id="menuNav">
+        <button class="nav-btn active" onclick="setMenu('ALL', this)">Tất cả</button>
+        <button class="nav-btn" onclick="setMenu('10', this)">Lớp 10</button>
+        <button class="nav-btn" onclick="setMenu('11', this)">Lớp 11</button>
+        <button class="nav-btn" onclick="setMenu('12', this)">Lớp 12</button>
+        <button class="nav-btn" onclick="setMenu('Đại học', this)">Đại học</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Banner Hero -->
+  <div class="hero">
+    <h1>KHO TÀI LIỆU & SÁCH MIỄN PHÍ</h1>
+    <p>Tổng hợp sách, đề thi, file PDF ôn thi THPT Quốc Gia và Đại học chọn lọc</p>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Tìm tên sách, tác giả hoặc môn..." oninput="filterBooks()">
+    </div>
+  </div>
+
+  <!-- Danh sách sách -->
+  <main class="main-content">
+    <div class="section-title" id="displayCategoryTitle">Tất cả tài liệu</div>
+    <div class="book-grid" id="bookGrid"></div>
+  </main>
+
+  <!-- Modal tải sách -->
+  <div id="downloadModal" class="modal">
+    <div class="modal-box">
+      <img id="mImg" class="modal-cover" src="" alt="Cover">
+      <h3 id="mTitle" style="font-size: 15px; margin-bottom: 8px; color: #111;"></h3>
+      <p style="font-size: 13px; color: #6b7280; line-height: 1.4;">
+        Bấm nút để mở Shopee ủng hộ duy trì web, file tài liệu gốc Drive sẽ tự động mở ra ngay! 🙏
+      </p>
+      <button class="btn-shopee" onclick="confirmDownload()">🛒 Mở Shopee & Tải File</button>
+    </div>
+  </div>
+
+  <script>
+    let books = [];
+    let currentBook = null;
+    let activeGrade = 'ALL';
+
+    fetch('data.json')
+      .then(res => res.json())
+      .then(data => {
+        books = data;
+        filterBooks();
+      });
+
+    function setMenu(grade, elem) {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      elem.classList.add('active');
+      activeGrade = grade;
+      document.getElementById('displayCategoryTitle').innerText = grade === 'ALL' ? 'Tất cả tài liệu' : `Tài liệu khối ${grade}`;
+      filterBooks();
+    }
+
+    function filterBooks() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const filtered = books.filter(b => {
+        const matchGrade = (activeGrade === 'ALL') || (b.grade === activeGrade);
+        const matchKeyword = b.title.toLowerCase().includes(q) || 
+                             (b.subject && b.subject.toLowerCase().includes(q)) ||
+                             (b.id && b.id.toLowerCase().includes(q));
+        return matchGrade && matchKeyword;
+      });
+      render(filtered);
+    }
+
+    function render(list) {
+      const grid = document.getElementById('bookGrid');
+      if (!list.length) {
+        grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#9ca3af; padding: 40px 0;">Không tìm thấy tài liệu phù hợp.</p>';
+        return;
+      }
+      grid.innerHTML = list.map(b => {
+        const img = b.image && b.image.trim() !== '' ? b.image : 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400';
+        return `
+          <div class="book-card">
+            <div class="book-cover-wrap">
+              <span class="badge-subject">${b.subject || 'Sách'}</span>
+              <img class="book-cover" src="${img}" alt="${b.title}" loading="lazy">
+            </div>
+            <div class="book-info">
+              <div class="book-title" title="${b.title}">${b.title}</div>
+              <button class="book-btn" onclick="openDownload('${b.id}')">Xem & Tải về</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openDownload(id) {
+      currentBook = books.find(b => b.id === id);
+      document.getElementById('mImg').src = currentBook.image || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400';
+      document.getElementById('mTitle').innerText = currentBook.title;
+      document.getElementById('downloadModal').style.display = 'flex';
+    }
+
+    function confirmDownload() {
+      if (!currentBook) return;
+      window.open(currentBook.shopee_link, '_blank');
+      window.location.href = currentBook.link;
+    }
+  </script>
+</body>
+</html>
